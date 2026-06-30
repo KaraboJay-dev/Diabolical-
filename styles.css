@@ -666,3 +666,31 @@ transform:translateY(-18px);
 }
 
 }
+/*==============================*/
+/* Cursor Glow */
+/*==============================*/
+
+.cursorGlow{
+
+position:fixed;
+
+width:300px;
+
+height:300px;
+
+background:radial-gradient(circle,
+rgba(212,175,55,.08),
+transparent 70%);
+
+border-radius:50%;
+
+pointer-events:none;
+
+transform:translate(-50%,-50%);
+
+z-index:0;
+
+transition:left .08s linear,
+top .08s linear;
+
+}
