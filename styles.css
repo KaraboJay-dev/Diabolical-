@@ -737,3 +737,29 @@ body {
 .fragrance-card:nth-child(4) { animation-delay: 0.4s; }
 .fragrance-card:nth-child(5) { animation-delay: 0.5s; }
 
+/* ===========================
+   LOGO
+=========================== */
+
+.logo{
+    display:flex;
+    align-items:center;
+    text-decoration:none;
+    z-index:1000;
+}
+
+.logo img{
+    width:90px;
+    height:auto;
+    transition:.6s ease;
+    filter:
+        drop-shadow(0 0 8px rgba(255,180,0,.25))
+        drop-shadow(0 0 18px rgba(255,60,0,.15));
+}
+
+.logo img:hover{
+    transform:scale(1.08) rotate(-2deg);
+    filter:
+        drop-shadow(0 0 12px rgba(255,215,0,.8))
+        drop-shadow(0 0 30px rgba(255,40,0,.35));
+}
