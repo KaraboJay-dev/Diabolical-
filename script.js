@@ -1,178 +1,119 @@
-// ========== SMOOTH SCROLL BEHAVIOR ==========
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
+//==============================
+// DIABOLICAL
+// script.js
+//==============================
 
-// ========== NAVBAR HIDE ON SCROLL ==========
-let lastScrollTop = 0;
-const navbar = document.querySelector('.navbar');
+// Sticky Header
 
-window.addEventListener('scroll', () => {
-    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
-    if (scrollTop > 100) {
-        if (scrollTop > lastScrollTop) {
-            navbar.style.transform = 'translateY(-100%)';
-        } else {
-            navbar.style.transform = 'translateY(0)';
-        }
+const header = document.querySelector("header");
+
+window.addEventListener("scroll", () => {
+
+    if (window.scrollY > 40) {
+
+        header.style.background = "rgba(0,0,0,.82)";
+        header.style.backdropFilter = "blur(18px)";
+        header.style.borderBottom = "1px solid rgba(212,175,55,.18)";
+
+    } else {
+
+        header.style.background = "rgba(0,0,0,.55)";
+        header.style.backdropFilter = "blur(14px)";
+        header.style.borderBottom = "1px solid rgba(255,215,0,.08)";
+
     }
-    
-    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+
 });
 
-navbar.style.transition = 'transform 0.3s ease';
 
-// ========== ACTIVE NAV LINK ON SCROLL ==========
-const sections = document.querySelectorAll('section');
-const navLinks = document.querySelectorAll('.nav-menu a');
+//==============================
+// Fade Sections
+//==============================
 
-window.addEventListener('scroll', () => {
-    let currentSection = '';
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        
-        if (pageYOffset >= sectionTop - 200) {
-            currentSection = section.getAttribute('id');
-        }
-    });
-    
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href').slice(1) === currentSection) {
-            link.classList.add('active');
-        }
-    });
-});
+const sections = document.querySelectorAll(
+".collection,.story,.journal,.newsletter"
+);
 
-// ========== NEWSLETTER FORM HANDLER ==========
-function handleNewsletterSubmit(e) {
-    e.preventDefault();
-    
-    const emailInput = e.target.querySelector('input[type="email"]');
-    const email = emailInput.value;
-    
-    if (email) {
-        const button = e.target.querySelector('button');
-        const originalText = button.textContent;
-        button.textContent = 'SUBSCRIBED ✓';
-        button.style.backgroundColor = 'var(--accent-red)';
-        
-        setTimeout(() => {
-            emailInput.value = '';
-            button.textContent = originalText;
-            button.style.backgroundColor = '';
-        }, 2000);
-        
-        console.log('Newsletter signup:', email);
-    }
+const observer = new IntersectionObserver(entries=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+entry.target.animate([
+
+{
+opacity:0,
+transform:"translateY(80px)"
+},
+
+{
+opacity:1,
+transform:"translateY(0)"
 }
 
-// ========== CONTACT FORM HANDLER ==========
-function handleContactSubmit(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(e.target);
-    const name = e.target.querySelector('input[type="text"]').value;
-    const email = e.target.querySelector('input[type="email"]').value;
-    const message = e.target.querySelector('textarea').value;
-    
-    if (name && email && message) {
-        const button = e.target.querySelector('button');
-        const originalText = button.textContent;
-        button.textContent = 'MESSAGE SENT ✓';
-        button.style.backgroundColor = 'var(--accent-red)';
-        
-        setTimeout(() => {
-            e.target.reset();
-            button.textContent = originalText;
-            button.style.backgroundColor = '';
-        }, 2000);
-        
-        console.log('Contact message:', { name, email, message });
-    }
+],{
+
+duration:1200,
+fill:"forwards",
+easing:"ease"
+
+});
+
 }
 
-// ========== CTA BUTTON RIPPLE EFFECT ==========
-const ctaButtons = document.querySelectorAll('.cta-button');
-
-ctaButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-        const ripple = document.createElement('span');
-        const rect = button.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-        
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = x + 'px';
-        ripple.style.top = y + 'px';
-        ripple.classList.add('ripple');
-        
-        button.appendChild(ripple);
-        
-        setTimeout(() => ripple.remove(), 600);
-    });
 });
 
-// ========== INTERSECTION OBSERVER FOR ANIMATIONS ==========
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('fade-in');
-            observer.unobserve(entry.target);
-        }
-    });
-}, observerOptions);
-
-document.querySelectorAll('.fragrance-card, .craft-card, .info-card').forEach(card => {
-    observer.observe(card);
+},{
+threshold:.18
 });
 
-// ========== ADD RIPPLE ANIMATION STYLES ==========
-const style = document.createElement('style');
-style.textContent = `
-    .ripple {
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.6);
-        transform: scale(0);
-        animation: ripple-animation 0.6s ease-out;
-        pointer-events: none;
-    }
-    
-    @keyframes ripple-animation {
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
-    }
-    
-    .nav-menu a.active {
-        color: var(--accent-gold);
-    }
-    
-    .fade-in {
-        animation: fadeInUp 0.6s ease forwards;
-    }
-`;
-document.head.appendChild(style);
+sections.forEach(section=>{
 
-console.log('✨ Diabolical website loaded successfully! 🖤');
+section.style.opacity="0";
 
+observer.observe(section);
+
+});
+
+
+//==============================
+// Bottle Hover Glow
+//==============================
+
+document.querySelectorAll(".bottle img").forEach(bottle=>{
+
+bottle.addEventListener("mouseenter",()=>{
+
+bottle.style.filter=
+"drop-shadow(0 0 50px rgba(255,180,0,.55))";
+
+});
+
+bottle.addEventListener("mouseleave",()=>{
+
+bottle.style.filter=
+"drop-shadow(0 0 25px rgba(255,170,0,.12))";
+
+});
+
+});
+
+
+//==============================
+// Luxury Cursor Glow
+//==============================
+
+const glow=document.createElement("div");
+
+glow.className="cursorGlow";
+
+document.body.appendChild(glow);
+
+document.addEventListener("mousemove",(e)=>{
+
+glow.style.left=e.clientX+"px";
+
+glow.style.top=e.clientY+"px";
+
+});
